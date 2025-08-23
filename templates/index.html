@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>붕어빵 가게</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Bulma CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+</head>
+<body class="has-background-light">
+<section class="section">
+  <div class="container">
+    <h2 class="title has-text-centered">붕어빵 가게</h2>
+
+    <div class="columns is-centered">
+      <div class="column is-10-tablet is-8-desktop">
+        <div class="box">
+
+          <!-- 손님 이름 -->
+          <div class="field">
+            <label class="label" for="name">손님 이름</label>
+            <div class="control">
+              <input id="name" class="input" placeholder="이름">
+            </div>
+          </div>
+
+          <!-- 붕어빵 개수 -->
+          <div class="field">
+            <label class="label" for="amount">붕어빵 개수</label>
+            <div class="control">
+              <input id="amount" type="number" min="1" class="input" placeholder="몇 개?">
+            </div>
+          </div>
+
+          <!-- 메뉴 선택 -->
+          <div class="field">
+            <label class="label" for="type">메뉴</label>
+            <div class="control">
+              <div class="select is-fullwidth">
+                <select id="type">
+                  <option value="1000">팥 붕어빵</option>
+                  <option value="2000">슈크림 붕어빵</option>
+                  <option value="3000">고구마 붕어빵</option>
+                  <option value="5000">치즈 붕어빵</option>
+                  <option value="4000">피자 호빵</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- 쿠폰 선택 -->
+          <div class="field">
+            <label class="label" for="couponSelect">쿠폰</label>
+            <div class="control">
+              <div class="select is-fullwidth">
+                <select id="couponSelect">
+                  <option value="30">30% 할인 쿠폰</option>
+                  <option value="10">10% 할인 쿠폰</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- 버튼들 -->
+          <div class="buttons">
+            <button class="button is-primary" onclick="sendOrder()">주문하기</button>
+            <button class="button is-link is-light" onclick="showMenu()">리스트</button>
+            <button class="button is-info" onclick="showSales()">매출액 보기</button>
+            <button class="button is-warning is-light" onclick="showCoupon()">랜덤 쿠폰 결과 보기</button>
+          </div>
+
+          <!-- 결과 영역 -->
+          <p id="result"></p>
+          <p id="typeResult"></p>
+          <p id="salesResult"></p>
+          <p id="couponResult"></p>
+          <p id="orderResult" class="has-text-weight-bold has-text-primary"></p>
+
+          <!-- 이미지 -->
+          <figure class="image is-16by9 mt-4">
+            <img src="https://d15jkvm9y6e1os.cloudfront.net/images/web/Mgzn/1067_3/20250127003815283001.png" alt="붕어빵 가게">
+          </figure>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+    async function showMenu() {
+      const res = await fetch("/menu")
+      const data = await res.json();
+      document.getElementById("typeResult").innerText = data.menu;
+    }
+
+    async function showSales() {
+      const res = await fetch("/sales")
+      const data = await res.json();
+      document.getElementById("salesResult").innerText = data.sales;
+    }
+
+    async function showCoupon() {
+      const res = await fetch("/coupon")
+      const data = await res.json();
+      document.getElementById("couponResult").innerText = data.coupon;
+    }
+
+    async function sendOrder() {
+      const name = document.getElementById("name").value
+      const coupon = document.getElementById("couponSelect").value;
+      const amount = document.getElementById("amount").value
+      const type = document.getElementById("type").value
+
+      const typeEl = document.getElementById("type");
+      const type_value = parseInt(typeEl.value, 10);
+      const type_name  = typeEl.options[typeEl.selectedIndex].text.trim();
+
+      const res = await fetch("/order", {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({ name: name, coupon: coupon, amount: amount, type: type, type_name: type_name})
+          });
+      const data = await res.json()
+      document.getElementById("orderResult").innerText = data.msg;
+    }
+</script>
+</body>
+</html>
