@@ -21,6 +21,7 @@ def get_sales() :
 def get_coupon() :
     return jsonify({"coupon" : "붕어빵 1개 무료 쿠폰!, 10% 할인 쿠폰"})
 
+
 @app.route("/order",methods = ["POST"])
 def get_order() :
     data = request.get_json()
@@ -35,7 +36,7 @@ def get_order() :
     price = int(type_b)
     price = (1 - coupon/100) * price * amount
 
-    return jsonify({"msg" : f"{name} 손님, {type_name} 주문이 완료되었습니다. 금액은 {price}원입니다."})
+    return jsonify({"msg" : f"{name} 손님, {type_name} {amount}개 주문이 완료되었습니다. 금액은 {price}원입니다."})
 
 if __name__ == '__main__':
 # debug=True 모드는 개발 중에만 사용해야 합니다.
