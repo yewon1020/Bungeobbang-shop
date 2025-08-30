@@ -42,5 +42,5 @@ def get_order() :
 
 if __name__ == '__main__':
 # debug=True 모드는 개발 중에만 사용해야 합니다.
-    port = int(os.environ.get("PORT, 5002"))  #Render가 주는 PORT 사용
+    port = int(os.environ.get("PORT", 5002))  #Render가 주는 PORT 사용
     app.run(host="0.0.0.0", debug=False, port=port)
